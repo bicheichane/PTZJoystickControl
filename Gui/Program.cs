@@ -79,16 +79,21 @@ internal class Program
             "PTZJoystickControl",
             Assembly.GetExecutingAssembly().GetName().Version!));
 
+        services.RegisterConstant<IBitfocusCompanionService>(new BitfocusCompanionService("http://127.0.0.1", 8000));
         services.RegisterConstant<ICameraSettingsStore>(new CameraSettingsStore());
         services.RegisterConstant<IGamepadSettingsStore>(new GamepadSettingsStore());
 
-        services.RegisterConstant<ICommandsService>(new CommandsService());
+        services.RegisterConstant<ICommandsService>(new CommandsService(
+            resolver.GetServiceOrThrow<IBitfocusCompanionService>()));
+
         services.RegisterConstant<ICamerasService>(new CamerasService(
             resolver.GetServiceOrThrow<ICameraSettingsStore>()));
+
         services.RegisterConstant<IGamepadsService>(new SdlGamepadsService(
             resolver.GetServiceOrThrow<IGamepadSettingsStore>(),
             resolver.GetServiceOrThrow<ICamerasService>(),
-            resolver.GetServiceOrThrow<ICommandsService>()));
+            resolver.GetServiceOrThrow<ICommandsService>(),
+            resolver.GetServiceOrThrow<IBitfocusCompanionService>()));
 
         services.RegisterLazySingleton(() => new GamepadsViewModel(
             resolver.GetServiceOrThrow<IGamepadsService>()));

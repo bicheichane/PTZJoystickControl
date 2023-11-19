@@ -31,6 +31,36 @@ public abstract class ViscaDeviceBase : INotifyPropertyChanged
     protected byte presetCmd;
     protected byte presetCmdNumber;
     protected byte presetRecallSpeed = 0x04;
+    protected int? _onSelectedBitfocusButtonNumber;
+    protected int? _onSelectedBitfocusPageNumber;
+
+    public int? OnSelectedBitfocusPageNumber
+    {
+        get => _onSelectedBitfocusPageNumber;
+        set
+        {
+            if (_onSelectedBitfocusPageNumber == value)
+                return;
+
+            _onSelectedBitfocusPageNumber = value;
+            NotifyPropertyChanged();
+            NotifyPersistentPropertyChanged();
+        }
+    }
+
+    public int? OnSelectedBitfocusButtonNumber
+    {
+        get => _onSelectedBitfocusButtonNumber;
+        set
+        {
+            if (_onSelectedBitfocusButtonNumber == value)
+                return;
+
+            _onSelectedBitfocusButtonNumber = value;
+            NotifyPropertyChanged();
+            NotifyPersistentPropertyChanged();
+        }
+    }
 
 
     public event PropertyChangedEventHandler? PropertyChanged;

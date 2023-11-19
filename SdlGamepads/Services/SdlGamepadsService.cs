@@ -16,16 +16,18 @@ public class SdlGamepadsService : IGamepadsService
     private readonly IGamepadSettingsStore _gamppadSettingsDb;
     private readonly ICamerasService _camerasService;
     private readonly ICommandsService _commandsService;
+    private readonly IBitfocusCompanionService _bitfocusCompanionService;
     public ObservableCollection<IGamepadInfo> Gamepads { get; private set; } = new();
     public ObservableCollection<IGamepad> ActiveGamepads { get; private set; } = new();
 
-    public SdlGamepadsService(IGamepadSettingsStore gamppadSettingsDb, ICamerasService camerasService, ICommandsService commandsService)
+    public SdlGamepadsService(IGamepadSettingsStore gamppadSettingsDb, ICamerasService camerasService, ICommandsService commandsService, IBitfocusCompanionService bitfocusCompanionService)
     {
         SDL.SDL_Init(SDL.SDL_INIT_JOYSTICK);
 
         _gamppadSettingsDb = gamppadSettingsDb;
         _camerasService = camerasService;
         _commandsService = commandsService;
+        _bitfocusCompanionService = bitfocusCompanionService;
 
         _gamppadSettingsDb.GetAllGamepadSettings().ForEach(x => Gamepads.Add(new SdlGamepadInfo()
         {

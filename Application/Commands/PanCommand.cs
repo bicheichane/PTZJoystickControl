@@ -1,12 +1,13 @@
 ﻿using PtzJoystickControl.Core.Commands;
 using PtzJoystickControl.Core.Devices;
 using PtzJoystickControl.Core.Model;
+using PtzJoystickControl.Core.Services;
 
 namespace PtzJoystickControl.Application.Commands;
 
 public class PanCommand : IDynamicCommand
 {
-    public PanCommand(IGamepad gamepad) : base(gamepad)
+    public PanCommand(IGamepad gamepad, IBitfocusCompanionService companionService) : base(gamepad, companionService)
     {
     }
 

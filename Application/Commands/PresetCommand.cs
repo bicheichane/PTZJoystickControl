@@ -1,12 +1,13 @@
 ﻿using PtzJoystickControl.Core.Commands;
 using PtzJoystickControl.Core.Devices;
 using PtzJoystickControl.Core.Model;
+using PtzJoystickControl.Core.Services;
 
 namespace PtzJoystickControl.Application.Commands;
 
 public class PresetCommand : IStaticCommand
 {
-    public PresetCommand(IGamepad gamepad) : base(gamepad)
+    public PresetCommand(IGamepad gamepad, IBitfocusCompanionService companionService) : base(gamepad, companionService)
     {
     }
 

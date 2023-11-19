@@ -6,12 +6,13 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using PtzJoystickControl.Core.Model;
 using PtzJoystickControl.Application.Devices;
+using PtzJoystickControl.Core.Services;
 
 namespace PtzJoystickControl.Application.Commands;
 
 public class SelectCameraCommand : IStaticCommand, INotifyPropertyChanged, INotifyCollectionChanged
 {
-    public SelectCameraCommand(IGamepad gamepad) : base(gamepad)
+    public SelectCameraCommand(IGamepad gamepad, IBitfocusCompanionService companionService) : base(gamepad, companionService)
     {
         Cameras = gamepad.Cameras ?? new ObservableCollection<ViscaDeviceBase>();
         gamepad.PropertyChanged += Gamepad_PropertyChanged;
@@ -21,6 +22,14 @@ public class SelectCameraCommand : IStaticCommand, INotifyPropertyChanged, INoti
     {
         if (e?.PropertyName == nameof(Gamepad.Cameras))
             Cameras = Gamepad.Cameras ?? new ObservableCollection<ViscaDeviceBase>();
+
+        if (e?.PropertyName == nameof(Gamepad.SelectedCamera))
+        {
+            var pageNumber = Gamepad.SelectedCamera!.OnSelectedBitfocusPageNumber;
+            var buttonNumber = Gamepad.SelectedCamera!.OnSelectedBitfocusButtonNumber;
+            
+            CompanionService.PressButton(pageNumber, buttonNumber);
+        }
     }
 
     private static ObservableCollection<ViscaDeviceBase> cameras = null!;

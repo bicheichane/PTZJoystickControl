@@ -46,6 +46,8 @@ namespace PtzJoystickControl.Application.Db
                             viscaIPDevice.Protocol = viscaDeviceSettings.Protocol;
                             viscaIPDevice.SendWaitTime = viscaDeviceSettings.SendWaitTime;
                             viscaIPDevice.UseHeader = viscaDeviceSettings.UseHeader;
+                            viscaIPDevice.OnSelectedBitfocusPageNumber = viscaDeviceSettings.OnSelectedBitfocusPageNumber;
+                            viscaIPDevice.OnSelectedBitfocusButtonNumber = viscaDeviceSettings.OnSelectedBitfocusButtonNumber;
                         }
                         return viscaDevice;
                     })

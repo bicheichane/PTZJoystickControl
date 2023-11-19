@@ -13,10 +13,17 @@ public class ViscaDeviceSettings
     public bool UseHeader { get; set; }
     public bool SingleCommand { get; set; }
 
-    public ViscaDeviceSettings() { }
+    public int? OnSelectedBitfocusButtonNumber { get; set; }
+    public int? OnSelectedBitfocusPageNumber { get; set; }
+
+    public ViscaDeviceSettings()
+    {
+    }
 
     public ViscaDeviceSettings(ViscaDeviceBase viscaDevice)
     {
+        OnSelectedBitfocusPageNumber = viscaDevice.OnSelectedBitfocusPageNumber;
+        OnSelectedBitfocusButtonNumber = viscaDevice.OnSelectedBitfocusButtonNumber;
         IViscaDeveiceTypeAssemblyQualifiedName = viscaDevice.GetType().AssemblyQualifiedName!;
         Name = viscaDevice.Name;
         if(viscaDevice is ViscaIPDeviceBase viscaIPDevice)

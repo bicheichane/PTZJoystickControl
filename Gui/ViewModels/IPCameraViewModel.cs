@@ -106,6 +106,41 @@ public class IPCameraViewModel : ViewModelBase, INotifyPropertyChanged
 
     public bool Connected { get => _camera.Connected; }
 
+    public int? BitfocusPage
+    {
+        get => _camera.OnSelectedBitfocusPageNumber;
+        set
+        {
+            try
+            {
+                _camera.OnSelectedBitfocusPageNumber = value;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                throw new DataValidationException("Must be an integer");
+            }
+        }
+    }
+
+    public int? BitfocusButton
+    {
+        get => _camera.OnSelectedBitfocusButtonNumber;
+        set
+        {
+            try
+            {
+                _camera.OnSelectedBitfocusButtonNumber = value;
+                
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                throw new DataValidationException("Must be an integer");
+            }
+        }
+    }
+
     public new event PropertyChangedEventHandler? PropertyChanged;
     private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
     {

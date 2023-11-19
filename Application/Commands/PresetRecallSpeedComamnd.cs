@@ -1,12 +1,13 @@
 ﻿using PtzJoystickControl.Core.Commands;
 using PtzJoystickControl.Core.Devices;
 using PtzJoystickControl.Core.Model;
+using PtzJoystickControl.Core.Services;
 
 namespace PtzJoystickControl.Application.Commands;
 
 public class PresetRecallSpeedComamnd : IStaticCommand
 {
-    public PresetRecallSpeedComamnd(IGamepad gamepad) : base(gamepad)
+    public PresetRecallSpeedComamnd(IGamepad gamepad, IBitfocusCompanionService companionService) : base(gamepad, companionService)
     {
     }
 
