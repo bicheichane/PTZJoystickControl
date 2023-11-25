@@ -1,4 +1,5 @@
-﻿using PtzJoystickControl.Core.Db;
+﻿using PtzJoystickControl.Application.Devices;
+using PtzJoystickControl.Core.Db;
 using PtzJoystickControl.Core.Devices;
 using PtzJoystickControl.Core.Model;
 using PtzJoystickControl.Core.Services;
@@ -40,6 +41,32 @@ public class SdlGamepadsService : IGamepadsService
         }));
 
         Task.Run(UpdateLoop);
+
+        _bitfocusCompanionService.ReceivedBitfocusCommand += onReceivedBitfocusCommand;
+    }
+
+    private void onReceivedBitfocusCommand(object? sender, BitfocusCompanionEvent e)
+    {
+        switch (e.EventType)
+        {
+            case InboundBitfocusCompanionEventEnum.SetCameraPreview:
+                if (Int32.TryParse(e.Value, out int camNum))
+                {
+                    SDL.SDL_JoyButtonEvent buttonEvent = new SDL.SDL_JoyButtonEvent()
+                    {
+                        button = (byte) e.Button,
+                        state = 1,
+                        which = 0 //TODO: do we care about multi gamepad support?
+                    };
+
+                    OnJoystickButtonEvent(buttonEvent);
+
+                    buttonEvent.state = 0;
+                    OnJoystickButtonEvent(buttonEvent);
+                }
+
+                break;
+        }
     }
 
     public void ActivateGamepad(IGamepadInfo gamepadInfo)
@@ -90,7 +117,10 @@ public class SdlGamepadsService : IGamepadsService
         if (gamepadSettings == null)
             return gamepad;
 
+        AddBitfocusCompanionButtons(gamepad);
+
         var commandsDict = gamepad.Commands.ToDictionary(val => val.GetType().ToString());
+
         foreach (IInput input in gamepad.Inputs)
         {
             InputSettings? storedInput = gamepadSettings.Inputs?.FirstOrDefault(i => i.Id == input.Id);
@@ -114,6 +144,24 @@ public class SdlGamepadsService : IGamepadsService
         }
 
         return gamepad;
+    }
+
+    private void AddBitfocusCompanionButtons(SdlGamepad gamepad)
+    {
+        var buttonCount = gamepad.Inputs.Count(i => i.InputType == InputType.Button);
+
+        IBitfocusCompanionService.SetJoystickButtonCount(buttonCount);
+
+        var bitfocusCommandCount = 2;
+
+        foreach (var companionEvent in _bitfocusCompanionService.SupportedEvents)
+        {
+            var id = string.Format(SdlGamepad.ButtonNameFormatString, companionEvent.Button);
+            var name = string.Format(companionEvent.EventNameFormatString, companionEvent.Value);
+
+            IInput bitfocusInput = new Input(id, name, InputType.Button, gamepad.Commands);
+            gamepad.AddInput(id, bitfocusInput);
+        }
     }
 
     private async Task UpdateLoop()

@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Octokit;
 using System.Reflection;
+using PtzJoystickControl.Core.Model;
 
 namespace PtzJoystickControl.Gui;
 
@@ -79,10 +80,10 @@ internal class Program
             "PTZJoystickControl",
             Assembly.GetExecutingAssembly().GetName().Version!));
 
-        services.RegisterConstant<IBitfocusCompanionService>(new BitfocusCompanionService("http://127.0.0.1", 8000));
+        services.RegisterConstant<IBitfocusCompanionService>(new BitfocusCompanionService(8000, 12345));
         services.RegisterConstant<ICameraSettingsStore>(new CameraSettingsStore());
         services.RegisterConstant<IGamepadSettingsStore>(new GamepadSettingsStore());
-
+        
         services.RegisterConstant<ICommandsService>(new CommandsService(
             resolver.GetServiceOrThrow<IBitfocusCompanionService>()));
 

@@ -22,7 +22,7 @@ public class SdlGamepad : IGamepad
         "Axis 4",
         "Axis 5",
     };
-    private const string buttonNameFormatString = "Button {0}";
+    public const string ButtonNameFormatString = "Button {0}";
     private List<ICommand> commands;
     private bool isActivated;
     private bool isConnected;
@@ -115,9 +115,9 @@ public class SdlGamepad : IGamepad
         var numButtons = SDL.SDL_JoystickNumButtons(sdlJoystickPointer);
         for (int i = 0; i < numButtons; i++)
         {
-            var name = string.Format(buttonNameFormatString, i + 1);
-            var id = string.Format(buttonNameFormatString, i);
-            IInput newInput = new Input(name, id, InputType.Button, commands.AsReadOnly());
+            var id = string.Format(ButtonNameFormatString, i + 1);
+            var name = string.Format(ButtonNameFormatString, i);
+            IInput newInput = new Input(id, name, InputType.Button, commands.AsReadOnly());
             newInput.PersistentPropertyChanged += (sender, e) => NotifyPersistentPropertyChanged("");
             inputs.Add(id, newInput);
         }
@@ -140,6 +140,8 @@ public class SdlGamepad : IGamepad
         //SDL.SDL_JoystickNumHats(j)
         //SDL.SDL_JoystickNumBalls(j)
     }
+
+    public void AddInput(string id, IInput input) => inputs.Add(id, input);
 
     public void Acquire()
     {
@@ -168,7 +170,7 @@ public class SdlGamepad : IGamepad
 
     internal void OnButtonEvent(SDL.SDL_JoyButtonEvent jbutton)
     {
-        if (inputs.TryGetValue(string.Format(buttonNameFormatString, jbutton.button), out var input))
+        if (inputs.TryGetValue(string.Format(ButtonNameFormatString, jbutton.button), out var input))
             input.InputValue = jbutton.state;
     }
 
