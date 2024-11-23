@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -34,7 +35,7 @@ namespace PtzJoystickControl.Application.Services
 
             listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
         }
-        #region Outbound}
+        #region Outbound
 
         public async void PressButton(int? pageNumber, int? buttonNumber)
         {
@@ -69,7 +70,11 @@ namespace PtzJoystickControl.Application.Services
                 {
                     var companionEvent =
                         BitfocusCompanionEvent.FindMatchingEvent(queryParam!, request.QueryString[queryParam]);
-                    RaiseCompanionEvent(companionEvent);
+                    if(companionEvent != null)
+                    {
+                        RaiseCompanionEvent(companionEvent);
+                    }
+                        
                 }
 
                 response.StatusCode = 200;

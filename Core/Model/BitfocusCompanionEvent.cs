@@ -25,14 +25,14 @@ namespace PtzJoystickControl.Core.Model
         private static int _buttonCounter = 0;
         private static int _joystickButtonCountOffset = 0;
 
-        public static BitfocusCompanionEvent FindMatchingEvent(string param, string? value)
+        public static BitfocusCompanionEvent? FindMatchingEvent(string param, string? value)
         {
             var inboundEvent = Enum.Parse<InboundBitfocusCompanionEventEnum>(param);
 
             var match = SupportedEvents.FindAll(e => e.EventType == inboundEvent && e.Value == value);
 
             if (match.Count != 1)
-                throw new Exception("Unexpected event matching");
+                return null;
 
             return match[0];
         }

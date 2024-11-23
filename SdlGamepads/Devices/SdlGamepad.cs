@@ -119,7 +119,7 @@ public class SdlGamepad : IGamepad
             var name = string.Format(ButtonNameFormatString, i);
             IInput newInput = new Input(id, name, InputType.Button, commands.AsReadOnly());
             newInput.PersistentPropertyChanged += (sender, e) => NotifyPersistentPropertyChanged("");
-            inputs.Add(id, newInput);
+            inputs.Add(name, newInput);
         }
 
         //for (int i = 0; i < Capabilities.PovCount; i++)
